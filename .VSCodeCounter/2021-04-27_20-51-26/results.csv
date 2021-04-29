@@ -1,0 +1,17 @@
+"filename", "language", "TypeScript React", "TypeScript", "comment", "blank", "total"
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\HUD.tsx", "TypeScript React", 109, 0, 76, 5, 190
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\client\ClientDataService.ts", "TypeScript", 0, 2, 1, 1, 4
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\client\GUI.client.tsx", "TypeScript React", 5, 0, 17, 3, 25
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\client\GuiComponents\App.tsx", "TypeScript React", 44, 0, 1, 7, 52
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\client\GuiComponents\Hud.tsx", "TypeScript React", 109, 0, 1, 4, 114
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\client\GuiComponents\Inventory.tsx", "TypeScript React", 304, 0, 3, 19, 326
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\client\GuiComponents\InventoryItem.tsx", "TypeScript React", 111, 0, 1, 26, 138
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\server\OnJoinOnLeave.server.ts", "TypeScript", 0, 27, 7, 10, 44
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\server\PlotManager.ts", "TypeScript", 0, 21, 1, 5, 27
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\server\Server.server.ts", "TypeScript", 0, 12, 1, 3, 16
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\server\ServerScriptService.d.ts", "TypeScript", 0, 9, 0, 1, 10
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\server\Services\DataService.ts", "TypeScript", 0, 27, 1, 10, 38
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\shared\DataModule.ts", "TypeScript", 0, 51, 3, 10, 64
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\shared\Item.ts", "TypeScript", 0, 21, 1, 4, 26
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\shared\Items.ts", "TypeScript", 0, 32, 1, 10, 43
+"Total", "-", 682, 202, 115, 118, 1117

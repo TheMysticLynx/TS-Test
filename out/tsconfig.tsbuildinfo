@@ -274,7 +274,7 @@
         "affectsGlobalScope": true
       },
       "../src/server/services/placementservice.ts": {
-        "version": "610cca6348a6628ee39f84bc932e8a30ea1d6f1ef01336bda1189032839383bf",
+        "version": "03fec3f66aedb89cff7433fbb5b8197337ff935b3b539fbef04dcab4dac5e00b",
         "affectsGlobalScope": true
       },
       "../src/server/services/plotservice.ts": {

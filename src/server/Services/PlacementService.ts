@@ -42,7 +42,7 @@ const PlacementService = KnitServer.CreateService({
         }
 
         //Take from inventory
-
+        
         //Place
 
         model.Parent = Workspace
@@ -73,18 +73,22 @@ const PlacementService = KnitServer.CreateService({
             }
 
             const orientation = model.GetBoundingBox()[0]
-            let size =  model.GetBoundingBox()[1];
+            const size =  model.GetBoundingBox()[1];
 
-            if (r === 1 || r === 3){ 
-                size = new Vector3(size.Z, size.Y, size.X);
-            }
+            const rotation = CFrame.fromEulerAnglesYXZ(
+                orientation.ToEulerAnglesYXZ()[0],
+                orientation.ToEulerAnglesYXZ()[1],
+                orientation.ToEulerAnglesYXZ()[2]
+            )
+            
+            const adjustedSize = new CFrame(size).mul(rotation).Position;
 
             //Get 4 sides
             const sides = new Array<Vector3>(4);
-            sides[0] = new Vector3(orientation.Position.X - size.X, 0, orientation.Position.Z - size.Z);
-            sides[1] = new Vector3(orientation.Position.X + size.X, 0, orientation.Position.Z + size.Z);
-            sides[2] = new Vector3(orientation.Position.X - size.X, 0, orientation.Position.Z + size.Z);
-            sides[3] = new Vector3(orientation.Position.X + size.X, 0, orientation.Position.Z - size.Z);
+            sides[0] = new Vector3(orientation.Position.X - adjustedSize.X, 0, orientation.Position.Z - adjustedSize.Z);
+            sides[1] = new Vector3(orientation.Position.X + adjustedSize.X, 0, orientation.Position.Z + adjustedSize.Z);
+            sides[2] = new Vector3(orientation.Position.X - adjustedSize.X, 0, orientation.Position.Z + adjustedSize.Z);
+            sides[3] = new Vector3(orientation.Position.X + adjustedSize.X, 0, orientation.Position.Z - adjustedSize.Z);
             //Check that all 4 corners are in plots
 
             let shouldBreak = false
@@ -95,15 +99,9 @@ const PlacementService = KnitServer.CreateService({
                     if (value === true) {
                         const part = game.Workspace.Plots.FindFirstChild(tostring(plotNum))?.FindFirstChild("Spots")?.FindFirstChild(key.split("_").join(".")) as Part;
                         part.Color = new Color3(math.random(), math.random(), math.random())
-                        print("AA")
-                        print(side.X, " ", part.Position.X - (part.Size.X / 2))
-                        print(side.X, " ", part.Position.X + (part.Size.X / 2))
-                        print(side.Z, " ", part.Position.Z - (part.Size.Z / 2))
-                        print(side.Z, " ", part.Position.Z + (part.Size.Z / 2))
                         if(side.X > part.Position.X - (part.Size.X / 2) && side.X < part.Position.X + (part.Size.X / 2)) {
                             if (side.Z > part.Position.Z - (part.Size.Z / 2) && side.Z < part.Position.Z + (part.Size.Z / 2)) {
                                 passed = true;
-                                print("TEst")
                             }
                         }
 
@@ -120,19 +118,17 @@ const PlacementService = KnitServer.CreateService({
                 return false;
             }
 
-            //Check no parts in region
-            const region = new Region3(orientation.Position.sub(size.div(2)), orientation.Position.add(size.div(2)))
-
-            if(!plotPart.Parent) {
-                return false
-            }
-
-            const ignoreList: Array<Instance> = new Array<Instance>(1, plotPart.Parent);
-
-            if(Workspace.FindPartsInRegion3WithIgnoreList(region, ignoreList).size() > 0) {
+            const boundsPart = new Instance("Part");
+            boundsPart.CanCollide = false;
+            boundsPart.Size = size;
+            boundsPart.CFrame = orientation;
+            boundsPart.Parent = Workspace;
+            const connection = boundsPart.Touched.Connect(function() {})
+            if(boundsPart.GetTouchingParts().size() > 0) {
                 return false;
             }
-
+            connection.Disconnect();
+            boundsPart.Destroy();
             return true;
         }
     }    

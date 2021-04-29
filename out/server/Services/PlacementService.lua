@@ -89,56 +89,51 @@ local PlacementService = KnitServer.CreateService({
 			end
 			local orientation = (model:GetBoundingBox())
 			local size = (select(2, model:GetBoundingBox()))
-			if r == 1 or r == 3 then
-				size = Vector3.new(size.Z, size.Y, size.X)
-			end
+			local rotation = CFrame.fromEulerAnglesYXZ((orientation:ToEulerAnglesYXZ()), (select(2, orientation:ToEulerAnglesYXZ())), (select(3, orientation:ToEulerAnglesYXZ())))
+			local _7 = CFrame.new(size)
+			local _8 = rotation
+			local adjustedSize = (_7 * _8).Position
 			-- Get 4 sides
 			local sides = table.create(4)
-			sides[1] = Vector3.new(orientation.Position.X - size.X, 0, orientation.Position.Z - size.Z)
-			sides[2] = Vector3.new(orientation.Position.X + size.X, 0, orientation.Position.Z + size.Z)
-			sides[3] = Vector3.new(orientation.Position.X - size.X, 0, orientation.Position.Z + size.Z)
-			sides[4] = Vector3.new(orientation.Position.X + size.X, 0, orientation.Position.Z - size.Z)
+			sides[1] = Vector3.new(orientation.Position.X - adjustedSize.X, 0, orientation.Position.Z - adjustedSize.Z)
+			sides[2] = Vector3.new(orientation.Position.X + adjustedSize.X, 0, orientation.Position.Z + adjustedSize.Z)
+			sides[3] = Vector3.new(orientation.Position.X - adjustedSize.X, 0, orientation.Position.Z + adjustedSize.Z)
+			sides[4] = Vector3.new(orientation.Position.X + adjustedSize.X, 0, orientation.Position.Z - adjustedSize.Z)
 			-- Check that all 4 corners are in plots
 			local shouldBreak = false
-			local _7 = sides
-			local _8 = function(side)
+			local _9 = sides
+			local _10 = function(side)
 				local passed = false
-				local _9 = DataService:GetData(player)
-				if _9 ~= nil then
-					local _10 = _9.Plots
-					local _11 = function(value, key)
+				local _11 = DataService:GetData(player)
+				if _11 ~= nil then
+					local _12 = _11.Plots
+					local _13 = function(value, key)
 						if value == true then
-							local _12 = game.Workspace.Plots:FindFirstChild(tostring(plotNum))
-							if _12 ~= nil then
-								_12 = _12:FindFirstChild("Spots")
-								if _12 ~= nil then
+							local _14 = game.Workspace.Plots:FindFirstChild(tostring(plotNum))
+							if _14 ~= nil then
+								_14 = _14:FindFirstChild("Spots")
+								if _14 ~= nil then
 									-- ▼ ReadonlyArray.join ▼
-									local _13 = "."
-									if _13 == nil then
-										_13 = ", "
+									local _15 = "."
+									if _15 == nil then
+										_15 = ", "
 									end
 									-- ▲ ReadonlyArray.join ▲
-									_12 = _12:FindFirstChild(table.concat(string.split(key, "_"), _13))
+									_14 = _14:FindFirstChild(table.concat(string.split(key, "_"), _15))
 								end
 							end
-							local part = _12
+							local part = _14
 							part.Color = Color3.new(math.random(), math.random(), math.random())
-							print("AA")
-							print(side.X, " ", part.Position.X - (part.Size.X / 2))
-							print(side.X, " ", part.Position.X + (part.Size.X / 2))
-							print(side.Z, " ", part.Position.Z - (part.Size.Z / 2))
-							print(side.Z, " ", part.Position.Z + (part.Size.Z / 2))
 							if side.X > part.Position.X - (part.Size.X / 2) and side.X < part.Position.X + (part.Size.X / 2) then
 								if side.Z > part.Position.Z - (part.Size.Z / 2) and side.Z < part.Position.Z + (part.Size.Z / 2) then
 									passed = true
-									print("TEst")
 								end
 							end
 						end
 					end
 					-- ▼ ReadonlyMap.forEach ▼
-					for _12, _13 in pairs(_10) do
-						_11(_13, _12, _10)
+					for _14, _15 in pairs(_12) do
+						_13(_15, _14, _12)
 					end
 					-- ▲ ReadonlyMap.forEach ▲
 				end
@@ -148,27 +143,24 @@ local PlacementService = KnitServer.CreateService({
 				end
 			end
 			-- ▼ ReadonlyArray.forEach ▼
-			for _9, _10 in ipairs(_7) do
-				_8(_10, _9 - 1, _7)
+			for _11, _12 in ipairs(_9) do
+				_10(_12, _11 - 1, _9)
 			end
 			-- ▲ ReadonlyArray.forEach ▲
 			if shouldBreak then
 				return false
 			end
-			-- Check no parts in region
-			local _9 = orientation.Position
-			local _10 = size / 2
-			local _11 = _9 - _10
-			local _12 = orientation.Position
-			local _13 = size / 2
-			local region = Region3.new(_11, _12 + _13)
-			if not plotPart.Parent then
+			local boundsPart = Instance.new("Part")
+			boundsPart.CanCollide = false
+			boundsPart.Size = size
+			boundsPart.CFrame = orientation
+			boundsPart.Parent = Workspace
+			local connection = boundsPart.Touched:Connect(function() end)
+			if #boundsPart:GetTouchingParts() > 0 then
 				return false
 			end
-			local ignoreList = table.create(1, plotPart.Parent)
-			if #Workspace:FindPartsInRegion3WithIgnoreList(region, ignoreList) > 0 then
-				return false
-			end
+			connection:Disconnect()
+			boundsPart:Destroy()
 			return true
 		end,
 	},

@@ -46,7 +46,11 @@ do
 				InventoryButtonCallback = function()
 					local _0 = self.inventoryRef
 					if _0 ~= nil then
-						_0:setVisibility(true)
+						local _1 = self.inventoryRef
+						if _1 ~= nil then
+							_1 = _1.state.show
+						end
+						_0:setVisibility(not _1)
 					end
 				end,
 			}),

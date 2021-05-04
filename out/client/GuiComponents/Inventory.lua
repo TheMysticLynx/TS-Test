@@ -1,24 +1,27 @@
 -- Compiled with roblox-ts v1.1.1
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"))
 -- eslint-disable prettier/prettier
-local Roact = TS.import(script, TS.getModule(script, "roact").src)
+local _0 = TS.import(script, TS.getModule(script, "roact").src)
+local Roact = _0
+local createBinding = _0.createBinding
+local TweenService = TS.import(script, TS.getModule(script, "services")).TweenService
 local ClientDataService = TS.import(script, script.Parent.Parent, "Modules", "ClientDataService")
 local setSelectedPart = TS.import(script, script.Parent.Parent, "Modules", "PlacementManager").setSelectedPart
 local Item = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "Item").Item
-local _0 = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "Items")
-local Decoration = _0.Decoration
-local Fan = _0.Fan
-local Gpu = _0.Gpu
-local Items = _0.Items
-local Placeable = _0.Placeable
-local Rack = _0.Rack
-local Utility = _0.Utility
+local _1 = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "Items")
+local Decoration = _1.Decoration
+local Fan = _1.Fan
+local Gpu = _1.Gpu
+local Items = _1.Items
+local Placeable = _1.Placeable
+local Rack = _1.Rack
+local Utility = _1.Utility
 local InventoryItem = TS.import(script, script.Parent, "InventoryItem").InventoryItem
 local Inventory
 do
 	Inventory = Roact.Component:extend("Inventory")
 	function Inventory:init(props)
-		local _1 = {
+		local _2 = {
 			show = false,
 			BtcSText = 0,
 			PowerUsageText = 0,
@@ -26,14 +29,16 @@ do
 			ItemName = "N/A",
 			SortClass = Item,
 		}
-		local _2 = "Inventory"
-		local _3 = ClientDataService:GetData()
-		if _3 ~= nil then
-			_3 = _3.Items
+		local _3 = "Inventory"
+		local _4 = ClientDataService:GetData()
+		if _4 ~= nil then
+			_4 = _4.Items
 		end
-		_1[_2] = _3
-		self.state = _1
+		_2[_3] = _4
+		self.state = _2
 		self.viewPortRef = Roact.createRef()
+		self.frameRef = Roact.createRef()
+		self.animAlphaBinding = { createBinding(1) }
 	end
 	function Inventory:setVisibility(v)
 		self:setState({
@@ -42,49 +47,49 @@ do
 	end
 	function Inventory:getItems(myClass)
 		local items = {}
-		local _1 = Items
-		local _2 = function(v)
-			local _3 = self.state.Inventory
-			if _3 ~= nil then
-				local _4 = v.Name
-				_3 = _3[_4]
+		local _2 = Items
+		local _3 = function(v)
+			local _4 = self.state.Inventory
+			if _4 ~= nil then
+				local _5 = v.Name
+				_4 = _4[_5]
 			end
-			local count = _3
-			local _4 = false
+			local count = _4
+			local _5 = false
 			if type(v) == "table" then
-				local _5 = getmetatable(v)
-				while _5 ~= nil do
-					if _5 == myClass then
-						_4 = true
+				local _6 = getmetatable(v)
+				while _6 ~= nil do
+					if _6 == myClass then
+						_5 = true
 						break
 					else
-						local _6 = getmetatable(_5)
-						if _6 then
-							_5 = _6.__index
+						local _7 = getmetatable(_6)
+						if _7 then
+							_6 = _7.__index
 						else
 							break
 						end
 					end
 				end
 			end
-			local _5 = _4
-			if _5 then
-				_5 = count ~= nil and count > 0
+			local _6 = _5
+			if _6 then
+				_6 = count ~= nil and count > 0
 			end
-			if _5 then
-				local _6 = items
-				local _7 = {
+			if _6 then
+				local _7 = items
+				local _8 = {
 					i = v,
 					c = count,
 				}
 				-- ▼ Array.push ▼
-				_6[#_6 + 1] = _7
+				_7[#_7 + 1] = _8
 				-- ▲ Array.push ▲
 			end
 		end
 		-- ▼ ReadonlyMap.forEach ▼
-		for _3, _4 in pairs(_1) do
-			_2(_4, _3, _1)
+		for _4, _5 in pairs(_2) do
+			_3(_5, _4, _2)
 		end
 		-- ▲ ReadonlyMap.forEach ▲
 		return items
@@ -97,94 +102,116 @@ do
 			})
 		end)
 	end
+	function Inventory:didUpdate(prevProps, prevState)
+		if prevState.show == self.state.show then
+			return nil
+		end
+		local frame = self.frameRef:getValue()
+		local target = self.state.show and 1 or 0
+		if frame ~= nil then
+			frame.Visible = true
+			local goal = {
+				Size = UDim2.new(target, 0, target, 0),
+			}
+			local options = TweenInfo.new(.5, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out)
+			local tween = TweenService:Create(frame, options, goal)
+			tween:Play()
+			if not self.state.show then
+				tween.Completed:Connect(function()
+					frame.Visible = false
+				end)
+			end
+		end
+	end
 	function Inventory:render()
 		local ItemFrames = {}
-		local _1 = self:getItems(self.state.SortClass)
-		local _2 = function(v)
+		local _2 = self:getItems(self.state.SortClass)
+		local _3 = function(v)
 			local newState = {
 				BtcSText = 0,
 				PowerUsageText = 0,
 				SellPriceText = v.i.Cost * .75,
 				ItemName = v.i.Name,
 			}
-			local _3 = false
+			local _4 = false
 			if type(v) == "table" then
-				local _4 = getmetatable(v)
-				while _4 ~= nil do
-					if _4 == Gpu then
-						_3 = true
+				local _5 = getmetatable(v)
+				while _5 ~= nil do
+					if _5 == Gpu then
+						_4 = true
 						break
 					else
-						local _5 = getmetatable(_4)
-						if _5 then
-							_4 = _5.__index
+						local _6 = getmetatable(_5)
+						if _6 then
+							_5 = _6.__index
 						else
 							break
 						end
 					end
 				end
 			end
-			if _3 then
+			if _4 then
 				newState.BtcSText = v.RoCoinPerSec
 				newState.PowerUsageText = v.PowerUsage
 			end
-			local _4 = ItemFrames
-			local _5 = Roact.createFragment({
+			local _5 = ItemFrames
+			local _6 = Roact.createFragment({
 				[v.i.Name] = Roact.createElement(InventoryItem, {
 					count = v.c,
 					item = v.i,
 					previewRef = self.viewPortRef,
 					MouseButtonClick = function()
 						self:setState(newState)
-						local _6 = v.i
-						local _7 = false
-						if type(_6) == "table" then
-							local _8 = getmetatable(_6)
-							while _8 ~= nil do
-								if _8 == Placeable then
-									_7 = true
+						local _7 = v.i
+						local _8 = false
+						if type(_7) == "table" then
+							local _9 = getmetatable(_7)
+							while _9 ~= nil do
+								if _9 == Placeable then
+									_8 = true
 									break
 								else
-									local _9 = getmetatable(_8)
-									if _9 then
-										_8 = _9.__index
+									local _10 = getmetatable(_9)
+									if _10 then
+										_9 = _10.__index
 									else
 										break
 									end
 								end
 							end
 						end
-						if _7 then
+						if _8 then
 							setSelectedPart(v.i)
 						end
 					end,
 				}),
 			})
 			-- ▼ Array.push ▼
-			_4[#_4 + 1] = _5
+			_5[#_5 + 1] = _6
 			-- ▲ Array.push ▲
 		end
 		-- ▼ ReadonlyArray.forEach ▼
-		for _3, _4 in ipairs(_1) do
-			_2(_4, _3 - 1, _1)
+		for _4, _5 in ipairs(_2) do
+			_3(_5, _4 - 1, _2)
 		end
 		-- ▲ ReadonlyArray.forEach ▲
-		local _3 = {
+		local _4 = {
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			BackgroundTransparency = 1,
 			Position = UDim2.new(0.5, 0, 0.5, 0),
 			Size = UDim2.new(1, 0, 1, 0),
-			Visible = self.state.show,
+			Visible = false,
+			[Roact.Ref] = self.frameRef,
 		}
-		local _4 = {}
-		local _5 = #_4
-		local _6 = {
+		local _5 = {}
+		local _6 = #_5
+		local _7 = {
 			BackgroundTransparency = 1,
 			Image = "rbxassetid://6656665774",
 			Position = UDim2.new(0.246, 0, 0.242, 0),
 			Size = UDim2.new(0.507, 0, 0.517, 0),
 		}
-		local _7 = {
+		local _8 = {
 			Preview = Roact.createElement("ImageLabel", {
 				BackgroundTransparency = 1,
 				Image = "rbxassetid://6656697737",
@@ -297,29 +324,29 @@ do
 				TextXAlignment = Enum.TextXAlignment.Left,
 			}),
 		}
-		local _8 = #_7
-		local _9 = {
+		local _9 = #_8
+		local _10 = {
 			Active = true,
 			BackgroundTransparency = 1,
 			Position = UDim2.new(0.271, 0, 0.187, 0),
 			Size = UDim2.new(0.694, 0, 0.745, 0),
 		}
-		local _10 = {}
-		local _11 = #_10
-		for _12, _13 in ipairs(ItemFrames) do
-			_10[_11 + _12] = _13
+		local _11 = {}
+		local _12 = #_11
+		for _13, _14 in ipairs(ItemFrames) do
+			_11[_12 + _13] = _14
 		end
-		_11 = #_10
-		_10[_11 + 1] = Roact.createElement("UIGridLayout", {
+		_12 = #_11
+		_11[_12 + 1] = Roact.createElement("UIGridLayout", {
 			CellPadding = UDim2.new(0, 10, 0, 10),
 			SortOrder = Enum.SortOrder.LayoutOrder,
 		})
-		_7[_8 + 1] = Roact.createElement("ScrollingFrame", _9, _10)
-		_7[_8 + 2] = Roact.createElement("UIAspectRatioConstraint", {
+		_8[_9 + 1] = Roact.createElement("ScrollingFrame", _10, _11)
+		_8[_9 + 2] = Roact.createElement("UIAspectRatioConstraint", {
 			AspectRatio = 1.721,
 		})
-		_4.Frame = Roact.createElement("ImageLabel", _6, _7)
-		_4.GpuSort = Roact.createElement("ImageButton", {
+		_5.Frame = Roact.createElement("ImageLabel", _7, _8)
+		_5.GpuSort = Roact.createElement("ImageButton", {
 			BackgroundTransparency = 1,
 			Image = "rbxassetid://6656769850",
 			Position = UDim2.new(0.196, 0, 0.316, 0),
@@ -330,7 +357,7 @@ do
 				})
 			end,
 		})
-		_4.FanSort = Roact.createElement("ImageButton", {
+		_5.FanSort = Roact.createElement("ImageButton", {
 			BackgroundTransparency = 1,
 			Image = "rbxassetid://6656770262",
 			Position = UDim2.new(0.196, 0, 0.409, 0),
@@ -341,7 +368,7 @@ do
 				})
 			end,
 		})
-		_4.DecorSort = Roact.createElement("ImageButton", {
+		_5.DecorSort = Roact.createElement("ImageButton", {
 			BackgroundTransparency = 1,
 			Image = "rbxassetid://6656770949",
 			Position = UDim2.new(0.196, 0, 0.588, 0),
@@ -352,7 +379,7 @@ do
 				})
 			end,
 		})
-		_4.GPURackSort = Roact.createElement("ImageButton", {
+		_5.GPURackSort = Roact.createElement("ImageButton", {
 			BackgroundTransparency = 1,
 			Image = "rbxassetid://6656770631",
 			Position = UDim2.new(0.196, 0, 0.499, 0),
@@ -363,7 +390,7 @@ do
 				})
 			end,
 		})
-		_4.UtilitiesSort = Roact.createElement("ImageButton", {
+		_5.UtilitiesSort = Roact.createElement("ImageButton", {
 			BackgroundTransparency = 1,
 			Image = "rbxassetid://6656771159",
 			Position = UDim2.new(0.196, 0, 0.675, 0),
@@ -374,23 +401,23 @@ do
 				})
 			end,
 		})
-		_4[_5 + 1] = Roact.createElement("UIAspectRatioConstraint", {
+		_5[_6 + 1] = Roact.createElement("UIAspectRatioConstraint", {
 			AspectRatio = 1.754,
 		})
-		_4.DeleteItem = Roact.createElement("ImageButton", {
+		_5.DeleteItem = Roact.createElement("ImageButton", {
 			BackgroundTransparency = 1,
 			Image = "rbxassetid://6661547244",
 			Position = UDim2.new(0.506, 0, 0.767, 0),
 			Size = UDim2.new(0.1, 0, 0.045, 0),
 		})
-		_4.MoveItem = Roact.createElement("ImageButton", {
+		_5.MoveItem = Roact.createElement("ImageButton", {
 			BackgroundTransparency = 1,
 			Image = "rbxassetid://6661548573",
 			Position = UDim2.new(0.396, 0, 0.767, 0),
 			Size = UDim2.new(0.1, 0, 0.045, 0),
 		})
 		return Roact.createFragment({
-			InventoryFrame = Roact.createElement("Frame", _3, _4),
+			InventoryFrame = Roact.createElement("Frame", _4, _5),
 		})
 	end
 end

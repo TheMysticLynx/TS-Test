@@ -246,11 +246,11 @@
         "affectsGlobalScope": false
       },
       "../src/client/guicomponents/inventory.tsx": {
-        "version": "241cc4661cb3ecdbaf84433b93accfeffbc3bf48ba6c601a625f817b3b7b0585",
+        "version": "d47d72bb4a6ae81a32961cdd0efbebd28a520d8f73b5260af2a83836fb873e90",
         "affectsGlobalScope": false
       },
       "../src/client/guicomponents/app.tsx": {
-        "version": "066d89d0d4b3612222c293c69e841769d95cb10e907ace814aebd8cdfceda408",
+        "version": "4ed35a5221f0bb81cc3a7ccb0a7c749dac01482d321ef44305876fd4893c0c44",
         "affectsGlobalScope": false
       },
       "../src/client/gui.client.tsx": {
@@ -288,6 +288,14 @@
       "../types/workspace.d.ts": {
         "version": "d539908c8db20040b846cec81f7fac47d056e116a03c61705f153f5bac32e238",
         "affectsGlobalScope": true
+      },
+      "../src/client/proximityprompt.client.ts": {
+        "version": "9b20a3a0ff456d10aaa9914eecdc8c9e3b221e1330702299aa83c55816e44f5a",
+        "affectsGlobalScope": false
+      },
+      "../src/client/guicomponents/prompt.tsx": {
+        "version": "5be72ccbf9481a27877d2ac33175d7733a540f882574fdb9d39ec6ba59ea732f",
+        "affectsGlobalScope": false
       }
     },
     "options": {
@@ -489,6 +497,7 @@
       "../src/client/guicomponents/inventory.tsx": [
         "../node_modules/@rbxts/knit/src/knit/util/promise.d.ts",
         "../node_modules/@rbxts/roact/src/index.d.ts",
+        "../node_modules/@rbxts/services/index.d.ts",
         "../src/client/guicomponents/inventoryitem.tsx",
         "../src/client/modules/clientdataservice.ts",
         "../src/client/modules/placementmanager.ts",
@@ -501,6 +510,9 @@
         "../src/client/modules/clientdataservice.ts",
         "../src/shared/datamodule.ts",
         "../src/shared/item.ts"
+      ],
+      "../src/client/guicomponents/prompt.tsx": [
+        "../node_modules/@rbxts/roact/src/index.d.ts"
       ],
       "../src/client/modules/clientdataservice.ts": [
         "../node_modules/@rbxts/knit/src/index.d.ts"
@@ -515,6 +527,9 @@
       ],
       "../src/client/modules/plotservice.ts": [
         "../node_modules/@rbxts/knit/src/index.d.ts"
+      ],
+      "../src/client/proximityprompt.client.ts": [
+        "../node_modules/@rbxts/services/index.d.ts"
       ],
       "../src/hud.tsx": [
         "../node_modules/@rbxts/roact/src/index.d.ts"

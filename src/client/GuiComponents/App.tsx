@@ -41,7 +41,7 @@ export class App extends Roact.Component<AppProps, StateProps> {
 						this.inventoryRef?.setVisibility(false);
 					}}
 					InventoryButtonCallback = { () => {
-						this.inventoryRef?.setVisibility(true);
+						this.inventoryRef?.setVisibility(!this.inventoryRef?.state.show);
 					}}
 				/>
 				<Inventory SetRef={ (i: Inventory) => {print(i); this.inventoryRef = i}}/>

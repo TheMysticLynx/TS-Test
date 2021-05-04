@@ -1,0 +1,20 @@
+"filename", "language", "TypeScript", "TypeScript React", "comment", "blank", "total"
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\HUD.tsx", "TypeScript React", 0, 109, 76, 5, 190
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\client\GUI.client.tsx", "TypeScript React", 0, 5, 17, 3, 25
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\client\GuiComponents\App.tsx", "TypeScript React", 0, 44, 1, 7, 52
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\client\GuiComponents\Hud.tsx", "TypeScript React", 0, 109, 1, 4, 114
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\client\GuiComponents\Inventory.tsx", "TypeScript React", 0, 309, 3, 20, 332
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\client\GuiComponents\InventoryItem.tsx", "TypeScript React", 0, 113, 1, 26, 140
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\client\Modules\ClientDataService.ts", "TypeScript", 2, 0, 1, 1, 4
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\client\Modules\PlacementManager.ts", "TypeScript", 98, 0, 7, 21, 126
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\client\Modules\PlotService.ts", "TypeScript", 2, 0, 1, 2, 5
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\server\OnJoinOnLeave.server.ts", "TypeScript", 26, 0, 7, 9, 42
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\server\Server.server.ts", "TypeScript", 12, 0, 1, 3, 16
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\server\ServerScriptService.d.ts", "TypeScript", 9, 0, 0, 1, 10
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\server\Services\DataService.ts", "TypeScript", 27, 0, 1, 10, 38
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\server\Services\PlacementService.ts", "TypeScript", 101, 0, 10, 26, 137
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\server\Services\PlotService.ts", "TypeScript", 38, 0, 1, 10, 49
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\shared\DataModule.ts", "TypeScript", 51, 0, 3, 10, 64
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\shared\Item.ts", "TypeScript", 21, 0, 1, 4, 26
+"c:\Users\Kaide\Documents\GitHub\TS-Test\src\shared\Items.ts", "TypeScript", 32, 0, 1, 10, 43
+"Total", "-", 419, 689, 133, 172, 1413

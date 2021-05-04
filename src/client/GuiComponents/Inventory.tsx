@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { each } from "@rbxts/knit/src/Knit/Util/Promise";
-import Roact, { Element } from "@rbxts/roact";
+import Roact, { createBinding, createRef, Element } from "@rbxts/roact";
+import { TweenService } from "@rbxts/services";
 import ClientDataService from "client/Modules/ClientDataService";
 import { setPlacementMode, setSelectedPart } from "client/Modules/PlacementManager";
 import { ProfileTemplate } from "shared/DataModule";
@@ -35,6 +36,8 @@ export class Inventory extends Roact.Component<props, state> {
 		Inventory: ClientDataService.GetData()?.Items 
     }
     viewPortRef: Roact.Ref<ViewportFrame>;
+	animAlphaBinding: LuaTuple<[Roact.Binding<number>, (newValue: number) => void]>;
+	frameRef: Roact.Ref<Frame>;
     
     setVisibility(v: boolean) {
         this.setState({show: v})
@@ -63,9 +66,39 @@ export class Inventory extends Roact.Component<props, state> {
         });
     }
 
+	didUpdate(prevProps: props, prevState: state) {
+		if (prevState.show === this.state.show) {
+			return;
+		}
+
+		const frame = this.frameRef.getValue()
+		const target = this.state.show ? 1 : 0
+		if (frame !== undefined){
+			frame.Visible = true;
+
+			const goal: {[P in keyof Frame]?: Frame[P]} = {
+				Size: new UDim2(target, 0, target, 0)
+			}
+
+			const options = new TweenInfo(.5, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out);
+
+			const tween = TweenService.Create(frame, options, goal);
+			tween.Play()
+			
+			if(!this.state.show) {
+				tween.Completed.Connect(() => {
+					frame.Visible = false
+				})
+			}
+		}
+	}
+
     constructor(props: props) {
         super(props);
         this.viewPortRef = Roact.createRef();
+		this.frameRef = Roact.createRef<Frame>();
+
+		this.animAlphaBinding = createBinding(1);
     }
 
     render() {
@@ -107,7 +140,8 @@ export class Inventory extends Roact.Component<props, state> {
 				BackgroundTransparency={1}
 				Position={new UDim2(0.5, 0, 0.5, 0)}
 				Size={new UDim2(1, 0, 1, 0)}
-                Visible={this.state.show}
+				Visible={false}
+				Ref = {this.frameRef}
             >
 				<imagelabel
 					Key="Frame"
